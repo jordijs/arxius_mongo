@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="MongoDb" id="Project-c37" database="MongoDb" >
+	<schema name="optica" >
+		<table name="brand" prior="sampleCollection" virtual="y" >
+			<column name="_id" type="objectId" length="800" decimal="0" jt="-8" mandatory="y" />
+			<column name="brand" prior="SampleKey" type="string" length="800" decimal="0" jt="12" mandatory="y" />
+			<column name="supplier" type="objectId" jt="-8" mandatory="y" />
+			<index name="_id_" unique="PRIMARY_KEY" >
+				<column name="_id" />
+			</index>
+			<fk name="fk_brand_suppliers" virtual="y" to_schema="optica" to_table="suppliers" >
+				<fk_column name="supplier" pk="_id" />
+			</fk>
+		</table>
+		<table name="customer" >
+			<column name="_id" type="objectId" jt="-8" mandatory="y" />
+			<column name="name" type="string" jt="12" mandatory="y" />
+			<column name="surname" type="string" jt="12" mandatory="y" />
+			<column name="address" type="long" jt="-1" />
+			<column name="phone" type="string" jt="12" />
+			<column name="mail" type="string" jt="12" />
+			<column name="date_enrol" type="date" jt="91" mandatory="y" />
+			<column name="referrer" type="objectId" jt="-8" />
+			<index name="_id_" unique="PRIMARY_KEY" >
+				<column name="_id" />
+			</index>
+			<fk name="fk_customer_customer" virtual="y" to_schema="optica" to_table="customer" >
+				<fk_column name="referrer" pk="_id" />
+			</fk>
+		</table>
+		<table name="employees" prior="employee" >
+			<column name="_id" type="objectId" jt="-8" mandatory="y" />
+			<column name="name" type="string" jt="12" mandatory="y" />
+			<column name="surname" type="string" jt="12" mandatory="y" />
+			<index name="_id_" unique="PRIMARY_KEY" >
+				<column name="_id" />
+			</index>
+		</table>
+		<table name="glassSell" virtual="y" >
+			<column name="_id" type="objectId" jt="-8" mandatory="y" />
+			<column name="employee" type="objectId" jt="-8" mandatory="y" />
+			<column name="glass" type="objectId" jt="-8" mandatory="y" />
+			<column name="time" type="timestamp" jt="93" mandatory="y" />
+			<column name="customer" type="objectId" jt="-8" mandatory="y" />
+			<index name="_id_" unique="PRIMARY_KEY" >
+				<column name="_id" />
+			</index>
+			<fk name="fk_glassSell_customer" virtual="y" to_schema="optica" to_table="customer" >
+				<fk_column name="customer" pk="_id" />
+			</fk>
+			<fk name="fk_glassSell_glasses" virtual="y" to_schema="optica" to_table="glasses" >
+				<fk_column name="glass" pk="_id" />
+			</fk>
+			<fk name="fk_glassSell_employee" virtual="y" to_schema="optica" to_table="employees" >
+				<fk_column name="employee" pk="_id" />
+			</fk>
+		</table>
+		<table name="glasses" >
+			<column name="_id" type="objectId" jt="-8" mandatory="y" />
+			<column name="brand" prior="id" type="objectId" jt="-8" mandatory="y" />
+			<column name="refraction" prior="frametype" type="array[object]" jt="4999545" >
+				<column name="refr_right" type="int" jt="4" />
+				<column name="refr_left" type="int" jt="4" />
+			</column>
+			<column name="frame" prior="frametype" type="array[object]" jt="4999545" >
+				<column name="type" type="string" jt="12" />
+				<column name="color" type="string" jt="12" />
+			</column>
+			<column name="price" type="int" jt="4" mandatory="y" />
+			<column name="glassColor" type="array[object]" jt="4999545" >
+				<column name="glassColorRight" type="objectId" jt="-8" />
+				<column name="glassColorLeft" type="string" jt="12" />
+			</column>
+			<index name="_id_" unique="PRIMARY_KEY" >
+				<column name="_id" />
+			</index>
+			<fk name="brand" virtual="y" to_schema="optica" to_table="brand" >
+				<fk_column name="brand" pk="_id" />
+			</fk>
+		</table>
+		<table name="suppliers" >
+			<column name="_id" type="objectId" jt="-8" mandatory="y" />
+			<column name="supplier" type="string" jt="12" mandatory="y" />
+			<column name="phone" type="objectId" jt="-8" />
+			<column name="nif" type="string" jt="12" mandatory="y" />
+			<column name="fax" type="string" jt="12" />
+			<column name="address" type="object" jt="4999544" >
+				<column name="street" type="string" jt="12" />
+				<column name="num" type="string" jt="12" />
+				<column name="floor" type="string" jt="12" />
+				<column name="door" type="string" jt="12" />
+				<column name="city" type="string" jt="12" />
+				<column name="postcode" type="string" jt="12" />
+				<column name="country" type="string" jt="12" />
+			</column>
+			<index name="_id_" unique="PRIMARY_KEY" >
+				<column name="_id" />
+			</index>
+		</table>
+	</schema>
+	<connector name="MongoDb" database="MongoDb" driver_class="com.wisecoders.dbschema.mongodb.JdbcDriver" driver_jar="mongojdbc4.8.jar" driver_desc="No Authentication" host="localhost" port="27017" instance="optica" user="admin" useSystemProxy="false" />
+	<layout name="Main Layout" id="Layout-1c59" show_relation="columns" >
+		<script name="Sample" id="Editor-162c" language="SQL" >
+			<string><![CDATA[db.sampleCollection.insert({"SampleKey":"SampleValue"});]]></string>
+		</script>
+	</layout>
+	<layout name="sampleCollection" id="Layout-14f8" show_relation="columns" >
+		<entity schema="optica" name="suppliers" column="address" color="3986C1" x="1280" y="80" />
+		<entity schema="optica" name="brand" color="3986C1" x="528" y="112" />
+		<entity schema="optica" name="customer" color="C1D8EE" x="512" y="752" />
+		<entity schema="optica" name="employees" color="C1D8EE" x="48" y="448" />
+		<entity schema="optica" name="glasses" column="frame" color="3986C1" x="784" y="464" />
+		<entity schema="optica" name="glasses" column="glassColor" color="3986C1" x="768" y="608" />
+		<entity schema="optica" name="glassSell" color="C1D8EE" x="240" y="400" />
+		<entity schema="optica" name="glasses" color="C1D8EE" x="448" y="416" />
+		<entity schema="optica" name="glasses" column="refraction" color="3986C1" x="784" y="320" />
+		<entity schema="optica" name="suppliers" color="C1D8EE" x="1008" y="128" />
+		<group name="suppliers" color="C4E0F9" >
+			<entity schema="optica" name="suppliers" column="address" />
+			<entity schema="optica" name="suppliers" />
+		</group>
+		<group name="glasses" color="C4E0F9" >
+			<entity schema="optica" name="glasses" />
+			<entity schema="optica" name="glasses" column="refraction" />
+			<entity schema="optica" name="glasses" column="frame" />
+			<entity schema="optica" name="glasses" column="glassColor" />
+		</group>
+		<script name="brand" id="Editor-79d" language="SQL" >
+			<string><![CDATA[optica.brand.find()]]></string>
+		</script>
+		<script name="sampleCollection" id="Editor-584" language="JavaScript" >
+			<string><![CDATA[optica.sampleCollection.find()]]></string>
+		</script>
+	</layout>
+</project>
